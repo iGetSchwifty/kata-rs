@@ -1,0 +1,7 @@
+[package]
+name = "kata"
+version = "1.0.0"
+authors = ["Tacenda"]
+edition = "2018"
+
+[dependencies]

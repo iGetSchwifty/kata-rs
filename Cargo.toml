@@ -1,0 +1,10 @@
+[package]
+name = "app"
+version = "1.0.0"
+authors = ["Tacenda"]
+edition = "2018"
+
+[workspace]
+
+[dependencies]
+kata = { path = "kata" }
