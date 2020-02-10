@@ -22,11 +22,13 @@ pub fn validate_file(args: &Vec<String>) -> Result<Box<&Path>, KataError> {
     }
 }
 
-pub fn validate_line_type(line_tokens: &Vec<&str>) -> DataType {
+pub fn validate_line_type(data: &str) -> DataType {
+    let line_tokens: Vec<&str> = data.split(" ").collect();
+
     if line_tokens.len() == 2 && line_tokens[0] == "Driver" {
         DataType::Driver(line_tokens[1].to_string())
     } else if line_tokens.len() == 5 && line_tokens[0] == "Trip" {
-        DataType::Trip(line_tokens[1].to_string())
+        DataType::Trip(line_tokens[1].to_string(), line_tokens)
     } else {
         DataType::Unknown
     }
@@ -77,7 +79,7 @@ mod tests {
 
     #[test]
     fn test_validate_line_type_driver() {
-        if let Driver(result) = validate_line_type(&["Driver", "TestName"].to_vec()) {
+        if let Driver(result) = validate_line_type("Driver TestName") {
             assert_eq!(result, "TestName");
         } else {
             assert!(false);
@@ -86,8 +88,9 @@ mod tests {
 
     #[test]
     fn test_validate_line_type_trip() {
-        if let Trip(result) = validate_line_type(&["Trip", "TestName", "07:15", "07:45", "17.3"].to_vec()) {
+        if let Trip(result, line_tokens) = validate_line_type("Trip TestName 07:15 07:45 17.3") {
             assert_eq!(result, "TestName");
+            assert_eq!(line_tokens, ["Trip", "TestName", "07:15", "07:45", "17.3"].to_vec());
         } else {
             assert!(false);
         }
@@ -95,10 +98,10 @@ mod tests {
 
     #[test]
     fn test_validate_line_type_unknown() {
-        match validate_line_type(&["Test", "TestName"].to_vec()) {
-            Trip(_) => assert!(false),
+        match validate_line_type("Test TestName") {
+            Trip(_, _) => assert!(false),
             Driver(_) => assert!(false),
             Unknown => assert!(true)
-        }
+        };
     }
 }

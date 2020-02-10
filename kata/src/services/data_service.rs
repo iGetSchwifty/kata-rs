@@ -17,13 +17,11 @@ pub fn process_lines(lines: Lines<io::BufReader<File>>) -> Vec<String> {
 }
 
 fn process_line(app_state: &mut AppState, data: String) {
-    let line_tokens: Vec<&str> = data.split(" ").collect();
-
-    match file_service::validate_line_type(&line_tokens) {
+    match file_service::validate_line_type(&data) {
         DataType::Driver(driver_name) => {
             app_state.add_driver(&driver_name);
         },
-        DataType::Trip(driver_name) => {
+        DataType::Trip(driver_name, line_tokens) => {
             app_state.process_trip(&driver_name, line_tokens);
         },
         DataType::Unknown => {

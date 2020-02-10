@@ -1,5 +1,5 @@
-pub enum DataType {
+pub enum DataType<'a> {
     Driver(String),
-    Trip(String),
+    Trip(String, Vec<&'a str>),
     Unknown
 }
